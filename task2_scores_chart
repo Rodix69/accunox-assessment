@@ -1,0 +1,55 @@
+import json
+import time
+from collections import defaultdict
+
+import requests
+import matplotlib.pyplot as plt
+
+# ASSUMPTIONS: The provided endpoint is a streaming (SSE) API rather than a request/response REST API, so the script reads events incrementally.
+API_URL = "https://live-test-scores.herokuapp.com/scores"
+
+def fetch_scores(max_events=2000, max_seconds=20):
+    """Read the live stream, return {(student, exam): score}."""
+    scores = {}
+    start = time.time()
+    try:
+        with requests.get(API_URL, stream=True, timeout=10) as resp:
+            resp.raise_for_status()
+            for line in resp.iter_lines(decode_unicode=True):
+                if time.time() - start > max_seconds or len(scores) >= max_events:
+                    break
+                if line and line.startswith("data:"):
+                    rec = json.loads(line[len("data:"):])
+                    scores[(rec["studentId"], rec["exam"])] = rec["score"] * 100
+    except (requests.RequestException, ValueError) as e:
+        print(f"Stream problem: {e}")
+    return scores
+
+def main():
+    scores = fetch_scores()
+    if not scores:
+        print("No data received.")
+        return
+
+    per_student = defaultdict(list)
+    for (student, _exam), score in scores.items():
+        per_student[student].append(score)
+
+    names = sorted(per_student)
+    avgs = [sum(per_student[n]) / len(per_student[n]) for n in names]
+    overall = sum(scores.values()) / len(scores)
+    print(f"{len(scores)} scores, {len(names)} students. Overall average: {overall:.2f}%")
+
+    plt.figure(figsize=(11, 6))
+    plt.bar(names, avgs, color="steelblue")
+    plt.axhline(overall, color="red", linestyle="--", label=f"Overall average ({overall:.1f}%)")
+    plt.xticks(rotation=60, ha="right")
+    plt.ylabel("Average score (%)")
+    plt.title("Average Test Score per Student")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("scores.png")
+    plt.show()
+
+if __name__ == "__main__":
+    main()
