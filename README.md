@@ -62,7 +62,7 @@ Reads `users.csv` (columns `name,email`) and inserts the rows into a SQLite data
 
 ### Task 5: Most complex database code
 - **Telecom churn MLOps pipeline (Phase 2):** https://github.com/Rodix69/production-grade-MLOps-framework
-- Most relevant file: [`1_load_to_postgres.py`](https://github.com/Rodix69/production-grade-MLOps-framework/blob/main/phase_02_data_engineering/src/1_load_to_postgres.py)
+- Most relevant file: [`1_load_to_postgres.py`](https://github.com/Rodix69/production-grade-MLOps-framework/blob/phase-02-data-engineering/phase_02_data_engineering/src/1_load_to_postgres.py)
 - PostgreSQL schema with a primary key and five indexes, idempotent chunked bulk loading of about 243K rows, and a paginated, filterable FastAPI layer over the database.
 - This is my most substantial database work to date. I have not yet built multi-table, heavily transactional systems.
 
