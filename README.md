@@ -58,7 +58,7 @@ Reads `users.csv` (columns `name,email`) and inserts the rows into a SQLite data
 
 ### Task 4: Most complex Python code
 - **Multi-agent research assistant:** https://github.com/Rodix69/multi-agent-research-assistant
-- [One line: what it does, and the hardest part, e.g. how the agents coordinate or share state.]
+- Developed a Multi-Agent Research Assistant using Python, LangGraph, and FastAPI, featuring Planner, Researcher, and Writer agents coordinated by a Python-based Supervisor for automated web research and citation-backed report generation.
 
 ### Task 5: Most complex database code
 - **Telecom churn MLOps pipeline (Phase 2):** https://github.com/Rodix69/production-grade-MLOps-framework
